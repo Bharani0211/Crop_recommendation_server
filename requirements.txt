@@ -23,3 +23,4 @@ dnspython
 threadpoolctl==2.1.0
 Werkzeug==2.0.1
 uwsgi
+flask_cors
