@@ -40,11 +40,16 @@ class Login(Resource):
             return {"message":"user not found"}, 404
         if data['username']==res['username'] and data['password']==res['password']:
             access_token = create_access_token(identity={"username":res['username']})
-            ress = {
+            data = {
                 "access_token":access_token,
                 "_id":str(res['_id'])
             }
-            return jsonify(ress)
+            response = app.response_class(
+                response=json.dumps(data),
+                status=200,
+                mimetype='application/json'
+            )
+            return response
         else:
             return {"message":"Invalid login credentials"}, 400
 
