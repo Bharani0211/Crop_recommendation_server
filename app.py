@@ -87,7 +87,6 @@ class SignUp(Resource):
             return {"message": "User added succesfully!"}, 200
 
 class Upload(Resource):
-    @jwt_required()
     def post(self, id, url):
         all_results1=[]
         link='https://drive.google.com/file/d/'+url+'/view?usp=sharing'
@@ -140,7 +139,6 @@ class Upload(Resource):
         return {"message":"Uploaded"}, 200
 
 class Results(Resource):
-    @jwt_required()
     def get(self):
         data = request.get_json()
         database = client['CropResultDatabase']
