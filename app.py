@@ -2,6 +2,7 @@ from flask import Flask, jsonify, json
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import datetime
+from flask_cors import CORS, cross_origin
 from flask_restful import Resource, Api, request
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
@@ -15,6 +16,7 @@ from logistic_regression.lr_index import logistic_regression_algorithm
 
 
 app = Flask(__name__)
+CORS(app)
 app.config['JWT_SECRET_KEY'] = 'S243t154shd$gu/adafhfj*jhDSHHDfbbfamfj_dAJDA.VVFAEF766r6^&'
 jwt = JWTManager(app)
 api = Api(app)
