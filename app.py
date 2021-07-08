@@ -44,7 +44,7 @@ class Login(Resource):
                 "access_token":access_token,
                 "_id":str(res['_id'])
             }
-            return ress
+            return jsonify(ress)
         else:
             return {"message":"Invalid login credentials"}, 400
 
