@@ -44,7 +44,12 @@ class Login(Resource):
             access_token = create_access_token(identity={"username":res['username']})
             data = {
                 "access_token":access_token,
-                "_id":str(res['_id'])
+                "_id":str(res['_id']),
+                "username":str(res['username']),
+                "area":str(res['area']),
+                "village_taluk":str(res['village_taluk']),
+                "district":str(res['district']),
+                "state":str(res['state']),
             }
             response = app.response_class(
                 response=json.dumps(data),
