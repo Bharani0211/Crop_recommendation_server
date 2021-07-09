@@ -45,6 +45,7 @@ class Login(Resource):
             data = {
                 "access_token":access_token,
                 "_id":str(res['_id']),
+                "email":str(res['email']),
                 "username":str(res['username']),
                 "area":str(res['area']),
                 "village_taluk":str(res['village_taluk']),
@@ -68,6 +69,7 @@ class SignUp(Resource):
         if res is not(None):
             return {"message":"user with this username is already found"}, 404
         user = {
+            "email":data['email'],
             "username":data['username'],
             "password":data['password'],
             "area":data['area'],
@@ -83,6 +85,7 @@ class SignUp(Resource):
         # creating user in crop database with their _id and name
         crop = {
             "_id":_id,
+            "email":data['email'],
             "username":data['username'],
             "history":[],
         }
