@@ -33,15 +33,15 @@ class Login(Resource):
     def post(self):
         data = request.get_json()
         users = db.loginDetails.find()
-        if data['username']==None:
+        if data['email']==None:
             return {"message":"username field is empty"}, 400
         if data['password']==None:
             return {"message":"password field is empty"}, 400
-        res = next(filter(lambda x: (x['username']==data['username'] and x['password']== data['password']), users),None)
+        res = next(filter(lambda x: (x['email']==data['email'] and x['password']== data['password']), users),None)
         if res is None:
             return {"message":"user not found"}, 404
-        if data['username']==res['username'] and data['password']==res['password']:
-            access_token = create_access_token(identity={"username":res['username']})
+        if data['email']==res['email'] and data['password']==res['password']:
+            access_token = create_access_token(identity={"email":res['email']})
             data = {
                 "access_token":access_token,
                 "_id":str(res['_id']),
