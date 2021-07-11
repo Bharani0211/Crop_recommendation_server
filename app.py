@@ -161,6 +161,7 @@ class Results(Resource):
         print(length)
         for i in range(0,length):
             history.append({
+                "created_at":results[0]['history'][i]["created_at"],
                 "data":[
                     {
                         "naive_bayes":{
