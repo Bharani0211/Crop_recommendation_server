@@ -81,8 +81,8 @@ class SignUp(Resource):
 
         #inserting user details
         result = db.loginDetails.insert_one(user)
-        
         _id=str(result.inserted_id)
+
         # creating user in crop database with their _id and name
         crop = {
             "_id":_id,
@@ -93,8 +93,28 @@ class SignUp(Resource):
         database = client['CropResultDatabase']
         result1 = database[_id].insert_one(crop)
 
+        # creating user in feedback database with their _id and name
+        feedback = {
+            "_id":_id,
+            "email":data['email'],
+            "username":data['username'],
+            "feedbacks":[],
+        }
+        database = client['Feedbacks']
+        result2 = database[_id].insert_one(feedback)
 
-        if result and result1:
+        # creating user in contactUs database with their _id and name
+        contactUs = {
+            "_id":_id,
+            "email":data['email'],
+            "username":data['username'],
+            "reports":[],
+        }
+        database = client['ContactUs']
+        result3 = database[_id].insert_one(contactUs)
+
+
+        if (result and (result1 and (result2 and result3))):
             return {"message": "User added succesfully!"}, 200
 
 class Upload(Resource):
@@ -236,10 +256,42 @@ class Results(Resource):
             return {"message":"no datas found"}, 404
         return history, 200
 
+class FeedBack(Resource):
+    def post(self):
+        data = request.get_json()
+        database = client["Feedbacks"]
+        all_results1=[]
+        id = data["_id"]
+        all_results1.append(
+            {
+                "thoughts":data["thoughts"],
+                "rating":data["rating"],
+            }
+        )
+        database[id].update_many({'_id': id}, {'$push': {'feedbacks': all_results1[0]}})
+        return { "message":"sumbitted"}, 200
+
+class ContactUs(Resource):
+    def post(self):
+        data = request.get_json()
+        database = client["ContactUs"]
+        all_results1=[]
+        id = data["_id"]
+        all_results1.append(
+            {
+                "name":data["name"],
+                "message":data["message"],
+            }
+        )
+        database[id].update_many({'_id': id}, {'$push': {'reports': all_results1[0]}})
+        return { "message":"sumbitted"}, 200
+
 api.add_resource(Upload,'/upload/<string:id>/<string:url>')
 api.add_resource(Results,'/result')
 api.add_resource(SignUp,'/signup')
 api.add_resource(Login,'/login')
+api.add_resource(FeedBack,'/feedback')
+api.add_resource(ContactUs,'/contactus')
 
 if __name__ == '__main__':
     app.run(debug=True)
