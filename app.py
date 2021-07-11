@@ -81,7 +81,7 @@ class UpdateUserDetails(Resource):
                 "username":res['username'],
                 "password":res['password'],
                 "area":data["area"],
-                "profileImg_url":data["profileImg_url"],
+                "profileImg_url":"",
                 "village_taluk":data["village_taluk"],
                 "district":data["district"],
                 "state":data["state"],
