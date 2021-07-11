@@ -14,7 +14,7 @@ from decision_tree.dt_index import decision_tree_algorithm
 from naive_bayes.nb_index import naive_bayes_algorithm
 from random_forest.rf_index import random_forest_algorithm
 from logistic_regression.lr_index import logistic_regression_algorithm
-
+from Upload import Upload
 
 app = Flask(__name__)
 CORS(app)
@@ -29,11 +29,12 @@ client = MongoClient()
 client = MongoClient("mongodb+srv://admin:admin@cluster0.7drty.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 print("Mongodb connection succesfull")
 
-db = client['UserAuthData']
 class Login(Resource):
     def post(self):
+        db = client['UserAuthData']
         data = request.get_json()
         users = db.loginDetails.find()
+        
         if data['email']==None:
             return {"message":"username field is empty"}, 400
         if data['password']==None:
@@ -92,6 +93,7 @@ class UpdateUserDetails(Resource):
 
 class SignUp(Resource):
     def post(self):
+        db = client['UserAuthData']
         data = request.get_json()
         users = db.loginDetails.find()
         res = next(filter(lambda x: (x['username']==data['username'] and x['password']== data['password']), users),None)
@@ -148,7 +150,10 @@ class SignUp(Resource):
             return {"message": "User added succesfully!"}, 200
 
 class Upload(Resource):
-    def post(self, id, url):
+    def post(self):
+        data = request.get_json()
+        url = data["folder_id"]
+        id = data["_id"]
         all_results1=[]
         link='https://drive.google.com/file/d/'+url+'/view?usp=sharing'
         print(link)
@@ -301,6 +306,8 @@ class FeedBack(Resource):
         database[id].update_many({'_id': id}, {'$push': {'feedbacks': all_results1[0]}})
         return { "message":"sumbitted"}, 200
 
+
+
 class ContactUs(Resource):
     def post(self):
         data = request.get_json()
@@ -316,13 +323,14 @@ class ContactUs(Resource):
         database[id].update_many({'_id': id}, {'$push': {'reports': all_results1[0]}})
         return { "message":"sumbitted"}, 200
 
-api.add_resource(Upload,'/upload/<string:id>/<string:url>')
+api.add_resource(Upload,'/upload')
 api.add_resource(Results,'/result')
 api.add_resource(SignUp,'/signup')
 api.add_resource(Login,'/login')
 api.add_resource(FeedBack,'/feedback')
 api.add_resource(ContactUs,'/contactus')
 api.add_resource(UpdateUserDetails, '/update_user_details')
+# api.add_resource(Uploader, '/upload')
 
 if __name__ == '__main__':
     app.run(debug=True)
