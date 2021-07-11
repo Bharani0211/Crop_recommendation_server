@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, json
 from pymongo import MongoClient
 from bson.objectid import ObjectId
-import datetime
+from datetime import datetime
 from flask_cors import CORS, cross_origin
 from flask_restful import Resource, Api, request
 from flask_jwt_extended import (
@@ -76,6 +76,7 @@ class SignUp(Resource):
             "village_taluk":data['village_taluk'],
             "district":data['district'],
             "state":data['state'],
+            "created_at":datetime.fromtimestamp(datetime.timestamp(datetime.now())),
         }
 
         #inserting user details
@@ -110,6 +111,7 @@ class Upload(Resource):
 
         all_results1.append(
             {
+                "created_at":datetime.fromtimestamp(datetime.timestamp(datetime.now())),
                 "data":[
                     {
                         "naive_bayes":{
