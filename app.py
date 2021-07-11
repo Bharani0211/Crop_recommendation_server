@@ -111,7 +111,7 @@ class Upload(Resource):
 
         all_results1.append(
             {
-                "created_at":datetime.fromtimestamp(datetime.timestamp(datetime.now())),
+                "created_at":str(datetime.fromtimestamp(datetime.timestamp(datetime.now()))),
                 "data":[
                     {
                         "naive_bayes":{
@@ -147,7 +147,7 @@ class Upload(Resource):
             }
         )
         database = client['CropResultDatabase']
-        database[id].update({'_id': id}, {'$push': {'history': all_results1[0]}})
+        database[id].update_many({'_id': id}, {'$push': {'history': all_results1[0]}})
         return {"message":"Uploaded"}, 200
 
 class Results(Resource):
