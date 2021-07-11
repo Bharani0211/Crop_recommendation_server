@@ -102,7 +102,7 @@ class SignUp(Resource):
             "email":data['email'],
             "username":data['username'],
             "password":data['password'],
-            "profileImg_url":data["profileImg_url"],
+            "profileImg_url":"",
             "area":data['area'],
             "village_taluk":data['village_taluk'],
             "district":data['district'],
