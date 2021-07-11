@@ -8,6 +8,7 @@ from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
 )
+from werkzeug.utils import secure_filename
 from knn_prediction.knn_index import knn_prediction_algorithm
 from decision_tree.dt_index import decision_tree_algorithm
 from naive_bayes.nb_index import naive_bayes_algorithm
@@ -47,6 +48,7 @@ class Login(Resource):
                 "_id":str(res['_id']),
                 "email":str(res['email']),
                 "username":str(res['username']),
+                "profileImg_url":str(res["profileImg_url"]),
                 "area":str(res['area']),
                 "village_taluk":str(res['village_taluk']),
                 "district":str(res['district']),
@@ -61,6 +63,33 @@ class Login(Resource):
         else:
             return {"message":"Invalid login credentials"}, 400
 
+class UpdateUserDetails(Resource):
+    def put(self):
+        db = client['UserAuthData']
+        data = request.get_json()
+        users = db.loginDetails.find()
+
+        res = next(filter(lambda x: (x['username']==data['username']), users),None)
+        if res is None:
+            return {"message":"Incorrect user-id found"},400
+        db.loginDetails.update(
+            { 
+                "username": data["username"] 
+            },
+            {
+                "email":res['email'],
+                "username":res['username'],
+                "password":res['password'],
+                "area":data["area"],
+                "profileImg_url":data["profileImg_url"],
+                "village_taluk":data["village_taluk"],
+                "district":data["district"],
+                "state":data["state"],
+                "created_at":res['created_at'],
+            },
+        )
+        return {"message":"User details updated successfully"},200
+
 class SignUp(Resource):
     def post(self):
         data = request.get_json()
@@ -72,11 +101,12 @@ class SignUp(Resource):
             "email":data['email'],
             "username":data['username'],
             "password":data['password'],
+            "profileImg_url":data["profileImg_url"],
             "area":data['area'],
             "village_taluk":data['village_taluk'],
             "district":data['district'],
             "state":data['state'],
-            "created_at":datetime.fromtimestamp(datetime.timestamp(datetime.now())),
+            "created_at":str(datetime.fromtimestamp(datetime.timestamp(datetime.now()))),
         }
 
         #inserting user details
@@ -292,6 +322,7 @@ api.add_resource(SignUp,'/signup')
 api.add_resource(Login,'/login')
 api.add_resource(FeedBack,'/feedback')
 api.add_resource(ContactUs,'/contactus')
+api.add_resource(UpdateUserDetails, '/update_user_details')
 
 if __name__ == '__main__':
     app.run(debug=True)
