@@ -148,7 +148,44 @@ class Upload(Resource):
         )
         database = client['CropResultDatabase']
         database[id].update_many({'_id': id}, {'$push': {'history': all_results1[0]}})
-        return {"message":"Uploaded"}, 200
+        return {
+            "uploaded":
+            {
+                "created_at":str(datetime.fromtimestamp(datetime.timestamp(datetime.now()))),
+                "data":[
+                    {
+                        "naive_bayes":{
+                            "crop":nb["Crop"],
+                            "accuracy":nb["Percentage"]+"%"
+                        },
+                    },
+                    {
+                        "knn":{
+                            "crop":knn["Crop"],
+                            "accuracy":knn["Percentage"]+"%"
+                        },
+                    },
+                    {
+                        "decision_tree":{
+                            "crop":dt["Crop"],
+                            "accuracy":dt["Percentage"]+"%"
+                        }
+                    },
+                    {
+                        "random_forest":{
+                            "crop":rf["Crop"],
+                            "accuracy":rf["Percentage"]+"%"
+                        }
+                    },
+                    {
+                        "logistic_regression":{
+                            "crop":lr["Crop"],
+                            "accuracy":lr["Percentage"]+"%"
+                        }
+                    }
+                ]
+            }
+        }, 200
 
 class Results(Resource):
     def get(self):
