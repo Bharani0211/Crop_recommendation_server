@@ -14,6 +14,7 @@ from decision_tree.dt_index import decision_tree_algorithm
 from naive_bayes.nb_index import naive_bayes_algorithm
 from random_forest.rf_index import random_forest_algorithm
 from logistic_regression.lr_index import logistic_regression_algorithm
+from Upload import Upload
 
 app = Flask(__name__)
 CORS(app)
@@ -81,7 +82,7 @@ class UpdateUserDetails(Resource):
                 "username":res['username'],
                 "password":res['password'],
                 "area":data["area"],
-                "profileImg_url":"",
+                "profileImg_url":data["profileImg_url"],
                 "village_taluk":data["village_taluk"],
                 "district":data["district"],
                 "state":data["state"],
@@ -102,7 +103,7 @@ class SignUp(Resource):
             "email":data['email'],
             "username":data['username'],
             "password":data['password'],
-            "profileImg_url":"",
+            "profileImg_url":data["profileImg_url"],
             "area":data['area'],
             "village_taluk":data['village_taluk'],
             "district":data['district'],
@@ -242,10 +243,10 @@ class Upload(Resource):
         }, 200
 
 class Results(Resource):
-    def get(self):
+    def get(self,id):
         data = request.get_json()
         database = client['CropResultDatabase']
-        _id=data["id"]
+        _id=id
         history = []
         results = database[_id].find()
         length=len(results[0]['history'])
@@ -323,12 +324,13 @@ class ContactUs(Resource):
         return { "message":"sumbitted"}, 200
 
 api.add_resource(Upload,'/upload')
-api.add_resource(Results,'/result')
+api.add_resource(Results,'/result/<string:id>')
 api.add_resource(SignUp,'/signup')
 api.add_resource(Login,'/login')
 api.add_resource(FeedBack,'/feedback')
 api.add_resource(ContactUs,'/contactus')
 api.add_resource(UpdateUserDetails, '/update_user_details')
+# api.add_resource(Uploader, '/upload')
 
 if __name__ == '__main__':
     app.run(debug=True)
