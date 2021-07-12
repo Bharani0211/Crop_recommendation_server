@@ -14,7 +14,6 @@ from decision_tree.dt_index import decision_tree_algorithm
 from naive_bayes.nb_index import naive_bayes_algorithm
 from random_forest.rf_index import random_forest_algorithm
 from logistic_regression.lr_index import logistic_regression_algorithm
-from Upload import Upload
 
 app = Flask(__name__)
 CORS(app)
@@ -330,7 +329,6 @@ api.add_resource(Login,'/login')
 api.add_resource(FeedBack,'/feedback')
 api.add_resource(ContactUs,'/contactus')
 api.add_resource(UpdateUserDetails, '/update_user_details')
-# api.add_resource(Uploader, '/upload')
 
 if __name__ == '__main__':
     app.run(debug=True)
