@@ -8,6 +8,7 @@ from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
 )
+import uuid
 from werkzeug.utils import secure_filename
 from knn_prediction.knn_index import knn_prediction_algorithm
 from decision_tree.dt_index import decision_tree_algorithm
@@ -81,7 +82,7 @@ class UpdateUserDetails(Resource):
                 "username":res['username'],
                 "password":res['password'],
                 "area":data["area"],
-                "profileImg_url":"",
+                "profileImg_url":data["profileImg_url"],
                 "village_taluk":data["village_taluk"],
                 "district":data["district"],
                 "state":data["state"],
@@ -102,7 +103,7 @@ class SignUp(Resource):
             "email":data['email'],
             "username":data['username'],
             "password":data['password'],
-            "profileImg_url":"",
+            "profileImg_url":data["profileImg_url"],
             "area":data['area'],
             "village_taluk":data['village_taluk'],
             "district":data['district'],
@@ -165,6 +166,7 @@ class Upload(Resource):
 
         all_results1.append(
             {
+                "recommendation_id":str(uuid.uuid1()),
                 "created_at":str(datetime.fromtimestamp(datetime.timestamp(datetime.now()))),
                 "data":[
                     {
@@ -252,6 +254,7 @@ class Results(Resource):
         print(length)
         for i in range(0,length):
             history.append({
+                "recommendation_id":results[0]['history'][i]["recommendation_id"],
                 "created_at":results[0]['history'][i]["created_at"],
                 "data":[
                     {
