@@ -298,14 +298,14 @@ class FeedBack(Resource):
         data = request.get_json()
         database = client["Feedbacks"]
         all_results1=[]
-        id = data["id"]
+        id = data["_id"]
         all_results1.append(
             {
                 "thoughts":data["thoughts"],
                 "rating":data["rating"],
             }
         )
-        database[id].update_many({'_id': id}, {'$push': {'feedbacks': all_results1[0]}})
+        database[id].update_many({"username": data["username"] }, {'$push': {'feedbacks': all_results1[0]}})
         return { "message":"sumbitted"}, 200
 
 
@@ -315,14 +315,14 @@ class ContactUs(Resource):
         data = request.get_json()
         database = client["ContactUs"]
         all_results1=[]
-        id = data["id"]
+        id = data["_id"]
         all_results1.append(
             {
                 "name":data["name"],
                 "message":data["message"],
             }
         )
-        database[id].update_many({'_id': id}, {'$push': {'reports': all_results1[0]}})
+        database[id].update_many({"username": data["username"] }, {'$push': {'reports': all_results1[0]}})
         return { "message":"sumbitted"}, 200
 
 api.add_resource(Upload,'/upload')
