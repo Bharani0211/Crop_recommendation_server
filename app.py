@@ -298,7 +298,7 @@ class FeedBack(Resource):
         data = request.get_json()
         database = client["Feedbacks"]
         all_results1=[]
-        id = data["_id"]
+        id = data["id"]
         all_results1.append(
             {
                 "thoughts":data["thoughts"],
@@ -315,7 +315,7 @@ class ContactUs(Resource):
         data = request.get_json()
         database = client["ContactUs"]
         all_results1=[]
-        id = data["_id"]
+        id = data["id"]
         all_results1.append(
             {
                 "name":data["name"],
