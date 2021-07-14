@@ -305,7 +305,7 @@ class FeedBack(Resource):
                 "rating":data["rating"],
             }
         )
-        database[id].update({'_id': id}, {'$push': {'feedbacks': all_results1[0]}})
+        database[id].update_many({'_id': id}, {'$push': {'feedbacks': all_results1[0]}})
         return { "message":"sumbitted"}, 200
 
 
@@ -322,7 +322,7 @@ class ContactUs(Resource):
                 "message":data["message"],
             }
         )
-        database[id].update({'_id': id}, {'$push': {'reports': all_results1[0]}})
+        database[id].update_many({'_id': id}, {'$push': {'reports': all_results1[0]}})
         return { "message":"sumbitted"}, 200
 
 api.add_resource(Upload,'/upload')
